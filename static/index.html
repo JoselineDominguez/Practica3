@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Direccion</title>
+    <!--Se extrae la libreria para poder usar Vue sin necesidad de descargarlo-->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!--La libreria Axios nos permite enviar y recibir datos de la API-->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <!--Nos permiten usar todas sus clases e iconos de Vue-->
+    <link href="https://unpkg.com/primevue/resources/themes/saga-blue/theme.css " rel="stylesheet">
+    <link href="https://unpkg.com/primevue/resources/primevue.min.css " rel="stylesheet">
+    <link href="https://unpkg.com/primeicons/primeicons.css " rel="stylesheet">
+    <link href="https://unpkg.com/primeflex/primeflex.css " rel="stylesheet">
+
+    <!--Solicitamos los componentes que vamos a ultilizar-->
+    <script src="https://unpkg.com/primevue/components/inputtext/inputtext.umd.min.js"></script>
+    <script src="https://unpkg.com/primevue/components/button/button.umd.min.js"></script>
+
+    <link href="css/direccion.css" rel="stylesheet">
+</head>
+
+<body>
+    <div id="app"  class="p-grid p-dir-col p-align-center p-p-4">
+        <div class="p-col" id="contenedor">
+            <div class="p-field p-grid">
+                <label for="txtCalle" class="p-col-fixed" style="width:100px">Calle</label>
+                <div class="p-col">
+                    <!--La etiqueta 'v-model' es la forma en que Vue identifica los objetos con los que puede interactuar-->
+                    <p-inputtext id="txtCalle" type="text" v-model="txtCalle" />
+                </div>
+                <label for="txtColonia" class="p-col-fixed" style="width:100px">Colonia</label>
+                <div class="p-col">
+                    <p-inputtext id="txtColonia" type="text" v-model="txtColonia" />
+                </div>
+                <label for="txtAlcaldia" class="p-col-fixed" style="width:100px">Alcaldia</label>
+                <div class="p-col">
+                    <p-inputtext id="txtAlcaldia" type="text" v-model="txtAlcaldia" />
+                </div>
+                <label for="txtCodigoPostal" class="p-col-fixed" style="width:100px">CodigoPostal</label>
+                <div class="p-col">
+                    <p-inputtext id="txtCodigoPostal" type="text" v-model="txtCodigoPostal" />
+                </div>
+                <label for="txtNumeroInterior" class="p-col-fixed" style="width:100px">NumeroInterior</label>
+                <div class="p-col">
+                    <p-inputtext id="txtNumeroInterior" type="text" v-model="txtNumeroInterior" />
+                </div>
+                <label for="txtNumeroExterior" class="p-col-fixed" style="width:100px">NumeroExterior</label>
+                <div class="p-col">
+                    <p-inputtext id="txtNumeroExterior" type="text" v-model="txtNumeroExterior" />
+                </div>
+            </div>
+            <div class="p-grid p-justify-around">
+                <!--'@click' hace llamar a funciones o eventos-->
+                <p-button label="Ver direcciones" class="p-button-text" @click="verDirecciones()" ></p-button>
+                <p-button label="Ingresar" icon="pi pi-sign-in" class="p-button-ml" @click="enviarDatos()" ></p-button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        var vm = new Vue({
+            //Todos los componentes que solicitamos y como los llamamos en el documento
+            components: {
+                'p-inputtext': inputtext,
+                'p-button' : button
+            },
+            //todos los nombres de los objetos y variables a utilizar con su valor inicial
+            data: {
+                txtDireccion: "",
+            },
+            //todos los metodos, funciones o eventos
+            methods:{
+                enviarDatos(){
+                  axios.post("/api/post-direccion", {
+                    //los datos a enviar, primero que key se le pone y despues su valor
+                    //El nombre de la key a poner corresponde al mismo nombre que se le dio en json a los valores 
+                    //en el struct (estructura/estructura.go linea 6)
+                    calle: this.txtCalle,
+                  	colonia: this.txtColonia,
+  	                alcaldia: this.txtAlcaldia,
+      	            codigoPostal: this.txtCodigoPostal,
+              	    numeroInterior: this.txtNumeroInterior,
+      	            numeroExterior: this.txtExterior,
+                  })
+                  //Si el envio de datos es exitoso
+                  .then((resp) => {
+                      console.log(resp.data);
+                  })
+                  //Si hubo algun error en el envio de datos o en la conexion
+                  .catch(function(error){
+                      console.log(error);
+                  })
+                },
+                verMembresias(){
+                    window.location.href = 'getDireccion.html';
+                }
+            }
+            //En que elemento se montara nuestro codigo Vue
+        }).$mount('#app');
+    </script>
+</body>
+</html>
